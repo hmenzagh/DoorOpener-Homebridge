@@ -83,6 +83,9 @@ class PiDoor {
   }
 
   private async updateStatus(): Promise<void> {
+	this.log.debug('Triggered updateStatus');
+	console.log('Triggered updateStatus');
+
     const { url, secret, port } = this.config;
     const { UNSECURED, SECURED } = this.Characteristic.LockCurrentState;
 
@@ -92,7 +95,7 @@ class PiDoor {
     await axios.get(`${url}:${port}/open?secret=${secret}`);
 
     this.currentStatus = true;
-	this.targetStatus = false;
+	this.targetStatus = true;
 	this.targetStateCharacteristic.updateValue(SECURED);
     this.currentStateCharacteristic.updateValue(SECURED);
 
