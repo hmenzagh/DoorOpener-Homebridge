@@ -31,6 +31,8 @@ class PiDoor {
     this.config = config;
     this.api = api;
 
+	log.debug('PiDoor:', config);
+
     this.Service = this.api.hap.Service;
     this.Characteristic = this.api.hap.Characteristic;
 
