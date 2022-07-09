@@ -61,7 +61,7 @@ class PiDoor {
   }
 
   async handleLockCurrentStateGet() {
-    this.log.debug('Triggered GET LockCurrentState');
+    console.log('Triggered GET LockCurrentState');
 
     const { UNSECURED, SECURED } = this.Characteristic.LockCurrentState;
 
@@ -69,7 +69,7 @@ class PiDoor {
   }
 
   async handleLockTargetStateGet() {
-    this.log.debug('Triggered GET LockTargetState');
+    console.log('Triggered GET LockTargetState');
 
     const { UNSECURED, SECURED } = this.Characteristic.LockTargetState;
 
@@ -77,13 +77,12 @@ class PiDoor {
   }
 
   async handleLockTargetStateSet(value) {
-    this.log.debug('Triggered SET LockTargetState:', value);
+    console.log('Triggered SET LockTargetState:', value);
 
     await this.updateStatus();
   }
 
   private async updateStatus(): Promise<void> {
-	this.log.debug('Triggered updateStatus');
 	console.log('Triggered updateStatus');
 
     const { url, secret, port } = this.config;
