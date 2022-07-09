@@ -77,12 +77,10 @@ class PiDoor {
   async handleLockTargetStateSet(value) {
     this.log.debug('Triggered SET LockTargetState:', value);
 
-    const { SECURED } = this.Characteristic.LockTargetState;
-
-    await this.updateStatus(value === SECURED);
+    await this.updateStatus();
   }
 
-  private async updateStatus(next: boolean): Promise<void> {
+  private async updateStatus(): Promise<void> {
     const { url, secret, port } = this.config;
     const { UNSECURED, SECURED } = this.Characteristic.LockCurrentState;
 
