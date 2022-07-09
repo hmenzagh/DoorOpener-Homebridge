@@ -95,10 +95,14 @@ class PiDoor {
 
     await axios.get(`${url}:${port}/open?secret=${secret}`);
 
-    this.currentStatus = true;
-	this.targetStatus = true;
-	this.targetStateCharacteristic.updateValue(SECURED);
-    this.currentStateCharacteristic.updateValue(SECURED);
+	setTimeout(() => {
+		this.currentStatus = true;
+		this.targetStatus = true;
+		this.targetStateCharacteristic.updateValue(SECURED);
+		this.currentStateCharacteristic.updateValue(SECURED);
+		this.service.updateCharacteristic(this.Characteristic.LockCurrentState, SECURED);
+		this.service.updateCharacteristic(this.Characteristic.LockTargetState, SECURED);
+	}, 5000);
 
     return;
   }
