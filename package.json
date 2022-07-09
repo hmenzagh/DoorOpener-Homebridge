@@ -1,18 +1,15 @@
 {
-  "displayName": "Homemade MQTT Smart Lock Plugin",
-  "name": "@nzws/homebridge-mqtt-smartlock",
+  "displayName": "DoorOpener Homebridge",
+  "name": "@hmenzagh/door-opener-homebridge",
   "version": "0.3.0",
-  "description": "Homebridge Plugin for homemade smart lock created with mqtt",
+  "description": "Homebridge Plugin for homemade smart lock",
   "license": "Apache-2.0",
   "publishConfig": {
     "access": "public"
   },
   "repository": {
     "type": "git",
-    "url": "git://github.com/nzws/homebridge-mqtt-smartlock.git"
-  },
-  "bugs": {
-    "url": "https://github.com/nzws/homebridge-mqtt-smartlock/issues"
+    "url": "https://github.com/hmenzagh/DoorOpener-Homebridge"
   },
   "engines": {
     "node": ">=10.17.0",
