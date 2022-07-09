@@ -1,14 +1,14 @@
 import { API, HAP, Logging, AccessoryConfig, Service, Characteristic } from 'homebridge';
-import mqtt, { Client } from 'mqtt';
+import axios from 'axios';
 
 let hap: HAP;
 
 export = (api: API) => {
   hap = api.hap;
-  api.registerAccessory('MQTTLocker', MQTTLocker);
+  api.registerAccessory('PiDoor', PiDoor);
 };
 
-class MQTTLocker {
+class PiDoor {
   private readonly log: Logging;
   private readonly config: AccessoryConfig;
   private readonly api: API;
@@ -20,7 +20,6 @@ class MQTTLocker {
   private readonly informationService: Service;
   private readonly service: Service;
 
-  private readonly client: Client;
   private currentStatus = true;
   private targetStatus = true;
 
@@ -46,27 +45,9 @@ class MQTTLocker {
       .onSet(this.handleLockTargetStateSet.bind(this));
 
     this.informationService = new this.Service.AccessoryInformation()
-      .setCharacteristic(this.Characteristic.Manufacturer, 'nzws.me')
-      .setCharacteristic(this.Characteristic.Model, 'MQTT Locker')
-      .setCharacteristic(this.Characteristic.SerialNumber, 'ho-me-br-id-ge');
-
-    const { mqtt: { host = 'localhost', port = 1883, username, password } } = this.config;
-    this.client = mqtt.connect(`mqtt://${host}:${port}`, {
-      username,
-      password,
-    });
-
-    this.client.subscribe('toggle');
-    this.updateStatus(this.targetStatus);
-
-    this.client.on('message', topic => {
-      this.log.debug(topic);
-
-      switch (topic) {
-        case 'toggle':
-          return this.updateStatus(!this.targetStatus);
-      }
-    });
+      .setCharacteristic(this.Characteristic.Manufacturer, 'hmenzagh.eu')
+      .setCharacteristic(this.Characteristic.Model, 'PiDoor')
+      .setCharacteristic(this.Characteristic.SerialNumber, 'pi-do-or-not-to-pi-do');
   }
 
   /**
@@ -102,34 +83,18 @@ class MQTTLocker {
   }
 
   private async updateStatus(next: boolean): Promise<void> {
-    const { degrees: { locked, unlocked }, degreesInterval } = this.config;
-
-    const degrees = next ? locked : unlocked;
-
-    const updateDegree = (i = 0): Promise<void> => {
-      if (degrees[i] !== undefined) {
-        this.client.publish('update', degrees[i].toString());
-      }
-
-      if (degrees[i + 1] !== undefined) {
-        return new Promise(resolve => {
-          setTimeout(() => {
-            updateDegree(i + 1).then(resolve);
-          }, degreesInterval || 500);
-        });
-      }
-
-      return Promise.resolve();
-    };
-
+    const { url, secret, port } = this.config;
     const { UNSECURED, SECURED } = this.Characteristic.LockCurrentState;
-    this.targetStatus = next;
-    this.targetStateCharacteristic.updateValue(next ? SECURED : UNSECURED);
 
-    await updateDegree();
+    this.targetStatus = false;
+    this.targetStateCharacteristic.updateValue(UNSECURED);
 
-    this.currentStatus = next;
-    this.currentStateCharacteristic.updateValue(next ? SECURED : UNSECURED);
+    await axios.get(`${url}:${port}/open?secret=${secret}`);
+
+    this.currentStatus = true;
+	this.targetStatus = false;
+	this.targetStateCharacteristic.updateValue(SECURED);
+    this.currentStateCharacteristic.updateValue(SECURED);
 
     return;
   }
