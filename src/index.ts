@@ -88,8 +88,10 @@ class PiDoor {
     const { url, secret, port } = this.config;
     const { UNSECURED, SECURED } = this.Characteristic.LockCurrentState;
 
+    this.currentStatus = false;
     this.targetStatus = false;
     this.targetStateCharacteristic.updateValue(UNSECURED);
+    this.currentStateCharacteristic.updateValue(UNSECURED);
 
     await axios.get(`${url}:${port}/open?secret=${secret}`);
 
