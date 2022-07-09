@@ -3,7 +3,7 @@
 ## Install
 
 ```
-npm install --global @nzws/homebridge-mqtt-smartlock
+npm install --global @hmenzaghi/door-opener-homebridge
 ```
 
 ## Config
