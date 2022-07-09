@@ -1,6 +1,6 @@
 {
   "displayName": "DoorOpener Homebridge",
-  "name": "@hmenzagh/door-opener-homebridge",
+  "name": "@hmenzaghi/door-opener-homebridge",
   "version": "0.3.0",
   "description": "Homebridge Plugin for homemade smart lock",
   "license": "Apache-2.0",
